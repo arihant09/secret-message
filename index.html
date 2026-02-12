@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>A Special Surprise</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
@@ -27,6 +27,8 @@
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
             height: 100vh;
+            /* Handles mobile browser bars better */
+            height: 100dvh; 
             overflow: hidden;
             display: flex;
             justify-content: center;
@@ -77,17 +79,9 @@
         }
 
         @keyframes float {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-
-            50% {
-                transform: translate(20px, 40px) rotate(180deg);
-            }
-
-            100% {
-                transform: translate(0, 0) rotate(360deg);
-            }
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, 40px) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
         }
 
         /* Game Container */
@@ -101,6 +95,9 @@
             align-items: center;
             justify-content: center;
             transition: opacity 1s ease;
+            /* Allow scrolling inside the game stage if screen is too small */
+            overflow-y: auto; 
+            padding: 20px 0;
         }
 
         #game-stage.hidden {
@@ -120,6 +117,7 @@
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
             margin-bottom: 2rem;
             animation: fadeIn 1s ease-out;
+            max-width: 90%;
         }
 
         .instructions h1 {
@@ -140,50 +138,9 @@
             color: var(--primary-color);
         }
 
-        /* Hidden Hearts */
-        .heart-target {
-            position: absolute;
-            font-size: 2.5rem;
-            color: #d62828;
-            /* Slightly darker to blend but identifiable if looked for */
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0.8;
-            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3));
-            animation: pulse-soft 3s infinite;
-        }
-
-        .heart-target:hover {
-            transform: scale(1.2);
-            color: #ff0000;
-        }
-
-        /* Random positions for hearts (will be set by JS mostly, but examples here) */
-
-        @keyframes pulse-soft {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Envelope Stage */
@@ -240,7 +197,6 @@
             border-left: 150px solid transparent;
             border-right: 150px solid transparent;
             border-top: 110px solid #ff758f;
-            /* Lighter shade */
             transform-origin: top;
             transition: transform 0.6s ease 0.5s, z-index 0.2s;
             z-index: 5;
@@ -340,6 +296,7 @@
             align-items: center;
             opacity: 0;
             transition: opacity 0.5s ease;
+            padding: 20px;
         }
 
         #letter-view.active {
@@ -349,7 +306,7 @@
 
         .love-letter {
             background: #fff;
-            width: 90%;
+            width: 100%;
             max-width: 600px;
             padding: 3rem;
             border-radius: 5px;
@@ -392,87 +349,7 @@
             border: none;
         }
 
-        .close-btn:hover {
-            color: #333;
-        }
-
-        /* Sparkle animation for finding heart */
-        .sparkle {
-            position: absolute;
-            pointer-events: none;
-            animation: sparkleAnim 0.8s ease-out forwards;
-            font-size: 20px;
-            color: gold;
-        }
-
-        @keyframes sparkleAnim {
-            0% {
-                transform: scale(0) rotate(0deg);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(2) rotate(180deg);
-                opacity: 0;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- Background Shapes -->
-    <div class="bg-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
-    <!-- Game Stage -->
-    <div id="game-stage">
-        <div class="instructions">
-            <h1>Find My Heart</h1>
-            <p>I've hidden 3 hearts inside these gifts and surprises.<br>Click them to find where my heart lies!</p>
-            <div class="score-board">Hearts Found: <span id="counter">0</span>/3</div>
-        </div>
-
-        <!-- Hiding Spots Container -->
-        <div class="hiding-spots-container">
-            <!-- Generated by JS -->
-        </div>
-    </div>
-
-    <!-- Envelope Stage -->
-    <div id="envelope-stage">
-        <div class="envelope-container" id="envelope">
-            <div class="envelope">
-                <div class="pocket"></div>
-                <!-- The letter inside -->
-                <div class="letter-preview"></div>
-                <div class="flap"></div>
-                <div class="seal">❤️</div>
-            </div>
-        </div>
-        <button class="open-btn" onclick="openEnvelope()">Open Me</button>
-    </div>
-
-    <!-- Full Letter View -->
-    <div id="letter-view">
-        <div class="love-letter">
-            <button class="close-btn" onclick="closeLetter()">×</button>
-            <h2>My Dearest Valentine,</h2>
-            <p>Just like you found these hidden hearts, you've found the deepest parts of my soul.</p>
-            <p>Every moment with you is a surprise I cherish, a gift I never want to stop opening.</p>
-            <p>Thank you for being my adventure, my comfort, and my love.</p>
-            <p>Happy Valentine's Day! ❤️</p>
-            <br/>
-            <p>I love you Ruchi ❤️❤️❤️</p>
-            <p style="text-align: right;">- Yours Arihant</p>
-        </div>
-    </div>
-
-    <style>
-        /* Additional Styles for Hiding Spots */
+        /* Hiding Spots */
         .hiding-spots-container {
             display: flex;
             flex-wrap: wrap;
@@ -491,6 +368,8 @@
             position: relative;
             user-select: none;
             filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.1));
+            /* Tap highlight removal for mobile */
+            -webkit-tap-highlight-color: transparent;
         }
 
         .hiding-spot:hover {
@@ -500,7 +379,6 @@
         .hiding-spot.shaking {
             animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
             color: #ccc;
-            /* Fade out slightly to show checked */
             cursor: default;
         }
 
@@ -524,70 +402,157 @@
             animation: popHeart 1s ease forwards;
         }
 
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            animation: sparkleAnim 0.8s ease-out forwards;
+            font-size: 20px;
+            color: gold;
+        }
+
+        /* Animations */
         @keyframes shake {
-
-            10%,
-            90% {
-                transform: translate3d(-1px, 0, 0);
-            }
-
-            20%,
-            80% {
-                transform: translate3d(2px, 0, 0);
-            }
-
-            30%,
-            50%,
-            70% {
-                transform: translate3d(-4px, 0, 0);
-            }
-
-            40%,
-            60% {
-                transform: translate3d(4px, 0, 0);
-            }
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
         @keyframes popOpen {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.2);
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: scale(0);
-                opacity: 0;
-            }
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
         }
 
         @keyframes popHeart {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 0;
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -150%) scale(2); opacity: 1; }
+            100% { transform: translate(-50%, -300%) scale(0); opacity: 0; }
+        }
+
+        @keyframes sparkleAnim {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(2) rotate(180deg); opacity: 0; }
+        }
+
+        /* --- MOBILE RESPONSIVENESS FIXES --- */
+        @media (max-width: 768px) {
+            .instructions {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
             }
 
-            50% {
-                transform: translate(-50%, -150%) scale(2);
-                opacity: 1;
+            .instructions h1 {
+                font-size: 2.2rem;
             }
 
-            100% {
-                transform: translate(-50%, -300%) scale(0);
-                opacity: 0;
+            .instructions p {
+                font-size: 1rem;
+            }
+
+            .score-board {
+                font-size: 1.2rem;
+            }
+
+            .hiding-spots-container {
+                gap: 1rem; /* Smaller gap */
+            }
+
+            .hiding-spot {
+                font-size: 2.5rem; /* Smaller icons */
+            }
+
+            /* Scale down envelope to fit screen */
+            .envelope-container {
+                transform: scale(0.8); 
+            }
+            .envelope-container:hover {
+                transform: scale(0.85);
+            }
+
+            .open-btn {
+                margin-top: 1rem;
+                padding: 0.8rem 2rem;
+                font-size: 1.2rem;
+            }
+
+            /* Adjust Letter for Mobile */
+            .love-letter {
+                padding: 1.5rem;
+                width: 95%;
+            }
+
+            .love-letter h2 {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .love-letter p {
+                font-size: 1.1rem; /* Readable on mobile */
+                line-height: 1.4;
+                margin-bottom: 1rem;
             }
         }
 
-        /* Adjust game stage layout for grid */
-        #game-stage {
-            display: flex;
-            /* Ensure flex for centering */
+        /* For very small screens */
+        @media (max-width: 380px) {
+            .hiding-spot {
+                font-size: 2rem;
+            }
+            .instructions h1 {
+                font-size: 1.8rem;
+            }
+            .envelope-container {
+                transform: scale(0.65);
+            }
         }
     </style>
+</head>
+
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div id="game-stage">
+        <div class="instructions">
+            <h1>Find My Heart</h1>
+            <p>I've hidden 3 hearts inside these gifts and surprises.<br>Click them to find where my heart lies!</p>
+            <div class="score-board">Hearts Found: <span id="counter">0</span>/3</div>
+        </div>
+
+        <div class="hiding-spots-container">
+            </div>
+    </div>
+
+    <div id="envelope-stage">
+        <div class="envelope-container" id="envelope">
+            <div class="envelope">
+                <div class="pocket"></div>
+                <div class="letter-preview"></div>
+                <div class="flap"></div>
+                <div class="seal">❤️</div>
+            </div>
+        </div>
+        <button class="open-btn" onclick="openEnvelope()">Open Me</button>
+    </div>
+
+    <div id="letter-view">
+        <div class="love-letter">
+            <button class="close-btn" onclick="closeLetter()">×</button>
+            <h2>My Dearest Valentine,</h2>
+            <p>Just like you found these hidden hearts, you've found the deepest parts of my soul.</p>
+            <p>Every moment with you is a surprise I cherish, a gift I never want to stop opening.</p>
+            <p>Thank you for being my adventure, my comfort, and my love.</p>
+            <p>Happy Valentine's Day! ❤️</p>
+            <br/>
+            <p>I love you Ruchi ❤️❤️❤️</p>
+            <p style="text-align: right;">- Yours Arihant</p>
+        </div>
+    </div>
 
     <script>
         let heartsFound = 0;
@@ -652,8 +617,6 @@
             } else {
                 // EMPTY
                 element.classList.add('shaking');
-                // Optional: Change emoji to empty/sad or just fade
-                // element.style.opacity = '0.5';
             }
         }
 
@@ -662,8 +625,9 @@
                 const sparkle = document.createElement('div');
                 sparkle.classList.add('sparkle');
                 sparkle.innerText = '✨';
+                // Adjust for scroll position
                 sparkle.style.left = (x + (Math.random() * 40 - 20)) + 'px';
-                sparkle.style.top = (y + (Math.random() * 40 - 20)) + 'px';
+                sparkle.style.top = (y + (Math.random() * 40 - 20)) + window.scrollY + 'px'; 
                 document.body.appendChild(sparkle);
                 setTimeout(() => sparkle.remove(), 800);
             }
